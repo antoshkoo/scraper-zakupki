@@ -19,6 +19,6 @@ app.conf.beat_schedule = {
     },
     'get-contracts-with-parser-status-1': {
         'task': 'zakupki.tasks.get_contract_full',
-        'schedule': 5.0,
+        'schedule': 3.0,
     },
 }
