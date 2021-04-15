@@ -1,0 +1,64 @@
+{% load humanize %}
+<h5 class="mb-3">Загружено закупок: {{ orders|length }}</h5>
+    <table class="table table-striped table-bordered table-hover align-middle table-sm">
+        <thead class="table-primary fw-bold align-middle" style="table-layout:fixed;">
+        <tr>
+            <td>Номер</td>
+            <td>Закон</td>
+            <td>Размещена</td>
+            <td>Обновлена</td>
+            <td>Статус</td>
+            <td>Название</td>
+            <td>Начальная цена</td>
+            <td>Поставщик</td>
+            <td>Цена контракта</td>
+            <td>Номер контракта</td>
+            <td>Реестровый номер</td>
+            <td>Статус</td>
+            <td>Дата заключения</td>
+            <td>Дата исполнения</td>
+            <td>Вложения</td>
+        </tr>
+        <tr class="table-filters">
+            <td><input type="text" class="form-control"></td>
+            <td><input type="text" class="form-control"></td>
+            <td><input type="text" class="form-control"></td>
+            <td><input type="text" class="form-control"></td>
+            <td><input type="text" class="form-control"></td>
+            <td><input type="text" class="form-control"></td>
+            <td><input type="text" class="form-control"></td>
+            <td><input type="text" class="form-control"></td>
+            <td><input type="text" class="form-control"></td>
+            <td><input type="text" class="form-control"></td>
+            <td><input type="text" class="form-control"></td>
+            <td><input type="text" class="form-control"></td>
+            <td><input type="text" class="form-control"></td>
+            <td><input type="text" class="form-control"></td>
+            <td><input type="text" class="form-control"></td>
+        </tr>
+        </thead>
+        <tbody>
+    {% for item in orders %}
+        <tr class="table-data">
+            <td><a href="{{ item.order_link }}={{ item.reg_number }}" target="_blank">{{ item.reg_number }}</a></td>
+            <td class="text-nowrap">{{ item.order_law }}</td>
+            <td>{{ item.order_published|date:"d.m.Y" }}</td>
+            <td>{{ item.order_update|date:"d.m.Y" }}</td>
+            <td>{{ item.order_status }}</td>
+            <td>{{ item.title }}</td>
+            <td>{{ item.order_price|intcomma }}₽</td>
+            <td>{{ item.client|default:'-' }}</td>
+            <td>{{ item.contract_price|default:"-"|intcomma }}₽</td>
+            <td>{{ item.contract_number|default:"-" }}</td>
+            <td><a href="https://zakupki.gov.ru/epz/contract/contractCard/common-info.html?reestrNumber={{ item.contract_reestr_number }}" target="_blank">{{ item.contract_reestr_number|default:"-" }}</a></td>
+            <td>{{ item.contract_status|default:"-" }}</td>
+            <td>{{ item.contract_date_signature|date:"d.m.Y"|default:"-" }}</td>
+            <td>{{ item.contract_date_start|date:"d.m.Y"|default:"-" }}</td>
+            <td class="flex-nowrap">
+                <a href="https://zakupki.gov.ru/epz/order/notice/ok504/view/documents.html?regNumber={{ item.reg_number }}" target="_blank">Закупка</a>
+                <a href="https://zakupki.gov.ru/epz/contract/contractCard/document-info.html?reestrNumber={{ item.contract_reestr_number }}" target="_blank">Контракт</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Zakupki - быстрый поиск{% endblock %}
+{% block content %}
+    <div class="alert alert-success" role="alert">
+        Этот поиск не сохраняет данные в базе.<br>Если ввести только ИНН поставщика, то можно найти все закупки с его участием.<br>Собирает последние 200 закупок с указанными параметрами (без данных о контрактах, вложениях и тд.)<br>Для подробного поиска используйте <a href="{% url 'customer_url' %}">поиск по заказчику</a>.
+    </div>
+    {% include 'includes/search-form.html' %}
+    {% if orders %}
+        {% include 'includes/results-short.html' %}
+    {% endif %}
+{% endblock %}

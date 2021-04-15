@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block title %}{{ customer.inn }} - {{ customer.name|safe }}{% endblock %}
+{% block content %}
+    <div class="alert alert-danger" role="alert">
+        Этот поиск сохраняет все собранные данные в базу.<br>Собирает последние 200 закупок заказчика с указанными параметрами <br>В фоне собирает данные о контракте и поставщике<br> Не используйте его просто так, если вам нужно быстро собрать базовую информацию по закупкам используйте <a href="{% url 'main_url' %}">быстрый поиск</a>.
+    </div>
+    <div class="card mb-3 border-dark">
+        <h6 class="card-header">{{ customer.name }}</h6>
+        <ul class="list-group list-group-horizontal align-middle" style="line-height: 40px">
+            <li class="list-group-item border-0 align-middle">ИНН: {{ customer.inn }}</li>
+            <li class="list-group-item border-0">ОГРН: {{ customer.ogrn }}</li>
+            <li class="list-group-item border-0"> Закупок: {{ customer.orders }}</li>
+            <li class="list-group-item border-0">
+            <a href="https://zakupki.gov.ru/epz/organization/view/info.html?organizationId={{ customer.customer_id }}" data-bs-toggle="tooltip" title="Профиль" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </li>
+            <li class="list-group-item border-0">
+            <a href="https://zakupki.gov.ru/epz/order/extendedsearch/results.html?searchString={{ customer.inn }}&sortBy=PUBLISH_DATE" data-bs-toggle="tooltip" title="Закупки" target="_blank"><i class="fas fa-list-ul"></i></a>
+            </li>
+            <li class="list-group-item border-0">
+             Экспорт закупок:
+                <a href="{% url 'export_url' customer.inn %}" class="btn btn-outline-success"><i class="fas fa-file-csv"></i></a>
+            </li>
+{#            <li class="list-group-item border-0">#}
+{#            <a href="{{ customer.inn }}" data-bs-toggle="tooltip" title="Обновить данные" target="_blank" disabled="уп"><i class="bi bi-arrow-counterclockwise" style="font-size: 20px;"></i></a>#}
+{#            </li>#}
+        </ul>
+    </div>
+    {% include 'includes/search-form.html' %}
+    {% if content %}
+        {% include 'includes/results-short.html' %}
+    {% endif %}
+    {% if orders %}
+        {% include 'includes/results-full.html' %}
+    {% endif %}
+{% endblock %}

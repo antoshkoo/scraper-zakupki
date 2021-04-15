@@ -1,0 +1,87 @@
+<form action="." method="post">{% csrf_token %}
+    <div class="card mb-3">
+        <h4 class="card-header">Поиск закупок</h4>
+        <div class="card-body">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-3 col-sm-6 d-flex flex-column">
+                            <div class="fw-bold pb-2">Статус:</div>
+                            <div class="form-check form-check-inline">
+                                {{ form.af }}
+                                <label class="form-check-label" for="{{ form.af.id_for_label }}">{{ form.af.help_text }}</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                {{ form.ca }}
+                                <label class="form-check-label" for="{{ form.ca.id_for_label }}">{{ form.ca.help_text }}</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                {{ form.pc }}
+                                <label class="form-check-label" for="{{ form.pc.id_for_label }}">{{ form.pc.help_text }}</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                {{ form.pa }}
+                                <label class="form-check-label" for="{{ form.pa.id_for_label }}">{{ form.pa.help_text }}</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 d-flex flex-column">
+                            <div class="fw-bold pb-2">Закон:</div>
+                            <div class="form-check form-check-inline">
+                                {{ form.fz44 }}
+                                <label class="form-check-label" for="{{ form.fz44.id_for_label }}">{{ form.fz44.help_text }}</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                {{ form.fz223 }}
+                                <label class="form-check-label" for="{{ form.fz223.id_for_label }}">{{ form.fz223.help_text }}</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                {{ form.ppRf615 }}
+                                <label class="form-check-label" for="{{ form.ppRf615.id_for_label }}">{{ form.ppRf615.help_text }}</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                {{ form.fz94 }}
+                                <label class="form-check-label" for="{{ form.fz94.id_for_label }}">{{ form.fz94.help_text }}</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 d-flex flex-column">
+                            <div class="form-floating my-1">
+                                {{ form.price_start }}
+                                <label for="{{ form.price_start.id_for_label }}">{{ form.price_start.help_text }}</label>
+                            </div>
+                            <div class="form-floating my-1">
+                                {{ form.price_end }}
+                                <label for="{{ form.price_end.id_for_label }}">{{ form.price_end.help_text }}</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 d-flex flex-column">
+                            <div class="form-floating my-1">
+                                {{ form.date_start }}
+                                <label for="{{ form.date_start.id_for_label }}">{{ form.date_start.help_text }}</label>
+                            </div>
+                            <div class="form-floating my-1">
+                                {{ form.date_end }}
+                                <label for="{{ form.date_end.id_for_label }}">{{ form.date_end.help_text }}</label>
+                            </div>
+                            <div class="form-floating my-1">
+                                {{ form.date_update }}
+                                <label for="{{ form.date_update.id_for_label }}">{{ form.date_update.help_text }}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        <div class="col-md-12 card-body">
+            <div class="row">
+                {% if customer %}
+                    <input type="hidden" name="customer_inn" value="{{ customer.inn }}" id="customer_inn">
+                {% else %}
+                    <div class="col-md-3">{{ form.customer_inn.label_tag }} {{ form.customer_inn }}</div>
+                {% endif %}
+                <div class="col-md-3">{{ form.client_inn.label_tag }} {{ form.client_inn }}</div>
+                <div class="col-md-3">{{ form.keywords.label_tag }} {{ form.keywords }} </div>
+                <div class="col-md-3 d-flex align-items-end" >
+                    <button type="submit" class="btn btn-primary">Искать</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
