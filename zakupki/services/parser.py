@@ -4,6 +4,7 @@ import datetime as dt
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from lxml import html
 
 from ..repositories.customer import customer_update_or_create, load_customer
 from ..repositories.order import order_update_or_create, order_update, order_check_exists, load_orders
@@ -33,6 +34,9 @@ _option.headless = True  # Работа в фоне
 class CustomerParser:
     def __init__(self):
         self.browser = webdriver.Firefox(options=_option)
+
+    def __del__(self):
+        self.browser.close()
 
     def get_page(self):
         """Загружаем страницу поиска закупок"""
@@ -280,56 +284,49 @@ class ContractParser:
 
 
 class ContractParserFull:
-    def __init__(self):
-        self.browser = webdriver.Firefox(options=_option)
-
-    def __del__(self):
-        self.browser.close()
-
-    def get_page(self, contract_reestr_number):
-        """Загружаем страницу поиска закупок"""
-        self.browser.get(f'https://zakupki.gov.ru/epz/contract/contractCard/common-info.html?reestrNumber={contract_reestr_number}')
-
-    def user_actions(self, limit: int):
-        """Эмуляриуем поведение пользователя"""
-        html = self.browser.find_element_by_tag_name('html')
-        for i in range(limit):
-            html.send_keys(Keys.DOWN)
-
-    def date_start(self):
+    def date_start(self, tree):
         """Дата заключения контракта"""
-        contract_date_start_xpath = './/span[@class="cardMainInfo__title" and text()="Заключение контракта"]/../span[2]'
-        result = self.browser.find_element_by_xpath(contract_date_start_xpath).text
-        return result or '01.01.2001'
-
-    def date_work_start(self):
-        """Начало исполнения контракта"""
-        contract_date_work_start_xpath = './/span[@class="section__title" and text()="Дата начала исполнения контракта"]/parent::section/span[2]'
+        search = './/span[@class="cardMainInfo__title" and text()="Заключение контракта"]/../span[2]'
         try:
-            result = self.browser.find_element_by_xpath(contract_date_work_start_xpath).text
+            result = tree.xpath(search)[0].text
         except:
-            result = '01.01.2001'
+            result = ''
         return result
 
-    def date_work_end(self):
-        """Срок исполнения контракта"""
-        contract_date_end_xpath = './/span[@class="section__title" and text()="Дата окончания исполнения контракта"]/../span[2]'
-        result = self.browser.find_element_by_xpath(contract_date_end_xpath).text
-        return result or '01.01.2001'
+    def date_work_start(self, tree):
+        """Начало исполнения контракта"""
+        search = './/span[@class="section__title" and text()="Дата начала исполнения контракта"]/parent::section/span[2]'
+        try:
+            result = tree.xpath(search)[0].text
+        except:
+            result = ''
+        return result
 
-    def client_inn(self):
+    def date_work_end(self, tree):
+        """Срок исполнения контракта"""
+        search = './/span[@class="section__title" and text()="Дата окончания исполнения контракта"]/../span[2]'
+        try:
+            result = tree.xpath(search)[0].text
+        except:
+            result = ''
+        return result
+
+    def client_inn(self, tree):
         """ИНН поставщика"""
-        contract_client_inn_xpath = './/span[@class="grey-main-light" and text()="ИНН:"]/../span[2]'
-        result = self.browser.find_element_by_xpath(contract_client_inn_xpath).text
-        return result or '-'
+        search = './/span[@class="grey-main-light" and text()="ИНН:"]/../span[2]'
+        try:
+            result = tree.xpath(search)[0].text
+        except:
+            result = ''
+        return result
 
     def parse(self, contract_reestr_number):
-        self.get_page(contract_reestr_number)
-        self.user_actions(3)
-        contract_date_start = self.date_start()
-        contract_date_end = self.date_work_start()
-        contract_date_work_start = self.date_work_end()
-        contract_client_inn = self.client_inn()
+        text = get_page(url=f'https://zakupki.gov.ru/epz/contract/contractCard/common-info.html?reestrNumber={contract_reestr_number}')
+        tree = html.fromstring(text)
+        contract_date_start = self.date_start(tree)
+        contract_date_end = self.date_work_start(tree)
+        contract_date_work_start = self.date_work_end(tree)
+        contract_client_inn = self.client_inn(tree)
 
         order_update({'contract_reestr_number': contract_reestr_number, 'parser_status': 2})
         order_update(
