@@ -10,9 +10,11 @@
             <td>Статус</td>
             <td>Название</td>
             <td>Начальная цена</td>
+            <td>Вложения</td>
         </tr>
         </thead>
         <tr class="table-filters">
+            <td><input type="text" class="form-control"></td>
             <td><input type="text" class="form-control"></td>
             <td><input type="text" class="form-control"></td>
             <td><input type="text" class="form-control"></td>
@@ -33,6 +35,9 @@
             <td>{{ item.order_status }}</td>
             <td>{{ item.title }}</td>
             <td>{{ item.order_price|intcomma }}₽</td>
+            <td>
+                <a href="https://zakupki.gov.ru/epz/order/notice/ok504/view/documents.html?regNumber={{ item.reg_number }}" target="_blank">Закупка</a>
+            </td>
         </tr>
     {% endfor %}
     </tbody>

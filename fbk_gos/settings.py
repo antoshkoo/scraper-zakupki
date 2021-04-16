@@ -24,7 +24,7 @@ SECRET_KEY = 'y7v5anf7lmy90&1a@iv!%2i9fvt3)f8=emoy17wiw-@i(kz&&7'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['5.61.35.86']
+ALLOWED_HOSTS = ['5.61.35.86', '127.0.0.1']
 
 
 # Application definition
@@ -124,5 +124,5 @@ STATIC_URL = '/static/'
 LOGIN_URL = 'login_url'
 LOGIN_REDIRECT_URL = 'main_url'
 
-CELERY_BROKER_URL = os.environ.get('CELERY_BROKER', 'redis://redis:6379/0')
-CELERY_RESULT_BACKEND = os.environ.get('CELERY_BROKER', 'redis://redis:6379/0')
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER', 'redis://127.0.0.1:6379/0')
+CELERY_RESULT_BACKEND = os.environ.get('CELERY_BROKER', 'redis://127.0.0.1:6379/0')
